@@ -13,6 +13,7 @@ public class ZombieController : MonoBehaviour
     public bool isDieFlg = false;
     private const float DIFF_TO_SEEK = 0.4f;
     private float speed;
+    private Vector3? autoRunLocation;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,17 +52,40 @@ public class ZombieController : MonoBehaviour
                     //seek when near player
                     if ((Share.player.transform.position - transform.position).magnitude < DIFF_TO_SEEK)
                     {
+                        // reset automove
+                        autoRunLocation = null;
+                        GetComponent<Animator>().SetBool("Walk", true);
                         //get pose of player
                         transform.LookAt(Share.player.transform.position);
                         // Lerp position.
                         Vector3 oldLocalPosition = transform.position;
                         transform.position = Vector3.Lerp(
                             oldLocalPosition, Share.player.transform.position, Time.deltaTime * speed);
-                        GetComponent<Animator>().SetBool("Walk", true);
                     }
                     else
                     {
-                        GetComponent<Animator>().SetBool("Walk", false);
+                        //Auto move
+                        if (autoRunLocation != null)
+                        {
+                            transform.LookAt(autoRunLocation.Value);
+                            GetComponent<Animator>().SetBool("Walk", true);
+                            Vector3 oldLocalPosition = transform.position;
+                            transform.position = Vector3.Lerp(
+                                oldLocalPosition, autoRunLocation.Value, Time.deltaTime * speed);
+                            //reset when arrived
+                            if ((transform.position - autoRunLocation.Value).magnitude < Share.stopAnimationRun)
+                                autoRunLocation = null;
+                        }
+                        else
+                        {
+                            GetComponent<Animator>().SetBool("Walk", false);
+                            //random for start automove
+                            if (UnityEngine.Random.Range(0, 10) == 0)
+                            {
+                                Debug.Log(UnityEngine.Random.Range(0, 10));
+                                autoRunLocation = MainController.positionInPlane;
+                            }
+                        }
                     }
                 }
             }

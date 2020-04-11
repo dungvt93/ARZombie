@@ -15,7 +15,7 @@ public class MainController : MonoBehaviour
     public GameObject BackToMenuBtn;
     public Text ScoreBoard;
     #endregion
-
+    public static Vector3? positionInPlane;
     private int MAX_STAR_QUANTITY = 1;
     private bool m_IsQuitting = false;
 
@@ -67,6 +67,8 @@ public class MainController : MonoBehaviour
 
             if (Share.player != null)
             {
+                //set auto move position
+                positionInPlane = GetPositionOnPlane();
                 //spawn zombie
                 if (Share.displayingEnemyList.Count <= Share.score / Share.SCORE_TO_ZOMBIE_QUANTITY)
                 {
@@ -230,6 +232,32 @@ public class MainController : MonoBehaviour
                     //set size for object
                     createdObject.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
                     return createdObject;
+                }
+            }
+        }
+        return null;
+    }
+    public Vector3? GetPositionOnPlane(){
+        //Detected Plane
+        List<DetectedPlane> m_NewPlanes = new List<DetectedPlane>();
+        Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.All);
+
+        if (m_NewPlanes.Count > 0)
+        {
+            // TrackableHit hit;
+            TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
+                TrackableHitFlags.FeaturePointWithSurfaceNormal;
+            Vector3 screenPos = camera.WorldToScreenPoint(
+                gamePlane.CenterPose.position);
+            // m_NewPlanes[UnityEngine.Random.Range(0, m_NewPlanes.Count)].CenterPose.position);
+            TrackableHit trackableHit;
+            if (Frame.Raycast(UnityEngine.Random.Range(screenPos.x - 1000, screenPos.x + 1000),
+                                UnityEngine.Random.Range(screenPos.y - 1000, screenPos.y + 1000), raycastFilter, out trackableHit))
+            {
+                //check same plane
+                if (CheckIsGamePlane(trackableHit))
+                {
+                    return trackableHit.Pose.position;
                 }
             }
         }

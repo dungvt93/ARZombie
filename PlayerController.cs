@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     public Vector3? targetPosition;
     public AudioSource audioSource;
-    private const float k_DiffThreshold = 0.06f;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +27,7 @@ public class PlayerController : MonoBehaviour
                     transform.position = Vector3.Lerp(transform.position, targetPosition.Value, Time.deltaTime * Share.k_PositionSpeed);
                     float diffLenght = (transform.position - targetPosition.Value).magnitude;
 
-                    if (diffLenght < k_DiffThreshold)
+                    if (diffLenght < Share.stopAnimationRun)
                     {
                         transform.position = targetPosition.Value;
                         GetComponent<Animator>().SetBool("Run", false);

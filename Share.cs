@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using GoogleMobileAds.Api;
 public class Share
 {
+    public volatile static float stopAnimationRun = 0.06f;
     public volatile static float k_PositionSpeed = 1.0f;
     public volatile static bool isStop = false;
     public volatile static GameObject player;
@@ -27,9 +28,9 @@ public class Share
     public static string appId = "ca-app-pub-2286036981511088~8371056564";
     public static void RequestBanner()
     {
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        // string adUnitId = "ca-app-pub-3940256099942544/6300978111";
         //real
-        // string adUnitId = "ca-app-pub-2286036981511088/4770916420";
+        string adUnitId = "ca-app-pub-2286036981511088/4770916420";
 
         // Create a 320x50 banner at the top of the screen.
         var banner = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
@@ -42,9 +43,9 @@ public class Share
     public static InterstitialAd interstitial;
     public static void RequestInterstitial()
     {
-        string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+        // string adUnitId = "ca-app-pub-3940256099942544/1033173712";
         //real
-        // string adUnitId = "ca-app-pub-2286036981511088/3653878510";
+        string adUnitId = "ca-app-pub-2286036981511088/8531451042";
 
         // Initialize an InterstitialAd.
         interstitial = new InterstitialAd(adUnitId);
