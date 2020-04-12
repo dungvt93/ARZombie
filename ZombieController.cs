@@ -39,13 +39,13 @@ public class ZombieController : MonoBehaviour
                 //Kill mode
                 if (Share.mode == Share.GameModes.KillGame)
                 {
+                    GetComponent<Animator>().SetBool("Walk", true);
                     //get pose of player
                     transform.LookAt(Share.player.transform.position);
                     // Lerp position.
                     Vector3 oldLocalPosition = transform.position;
                     transform.position = Vector3.Lerp(
                         oldLocalPosition, Share.player.transform.position, Time.deltaTime * speed);
-                    GetComponent<Animator>().SetBool("Walk", true);
                 }
                 else
                 {
