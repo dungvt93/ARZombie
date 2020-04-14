@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
                 audioSource.Play(0);
                 Handheld.Vibrate();
                 Share.isStop = true;
+                Destroy(other.gameObject.GetComponent<Rigidbody>());
                 other.gameObject.GetComponent<Animator>().SetBool("Kill",true);
             }
         }
