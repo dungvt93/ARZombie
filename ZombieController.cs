@@ -11,7 +11,7 @@ public class ZombieController : MonoBehaviour
     public AudioClip generalClip;
 
     public bool isDieFlg = false;
-    private const float DIFF_TO_SEEK = 0.4f;
+    private const float DIFF_TO_SEEK = 0.2f;
     private float speed;
     private Vector3? autoRunLocation;
     // Start is called before the first frame update
@@ -95,7 +95,34 @@ public class ZombieController : MonoBehaviour
             Debug.Log(ex);
         }
     }
-
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        try
+        {
+            if (collisionInfo.gameObject.tag == "Zombie")
+            {
+                autoRunLocation = null;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        try
+        {
+            if (other.tag == "Zombie")
+            {
+                autoRunLocation = null;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
     IEnumerator ExampleCoroutine(float seconds)
     {
         //Print the time of when the function is first called.

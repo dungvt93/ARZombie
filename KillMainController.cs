@@ -13,6 +13,7 @@ public class KillMainController : MonoBehaviour
     public Camera camera;
     public GameObject RestartBtn;
     public GameObject BackToMenuBtn;
+    public GameObject HelpBtn;
     public Text ScoreBoard;
     #endregion
 
@@ -55,6 +56,7 @@ public class KillMainController : MonoBehaviour
             {
                 RestartBtn.SetActive(true);
                 BackToMenuBtn.SetActive(true);
+                HelpBtn.SetActive(false);
                 return;
             }
 
@@ -92,10 +94,7 @@ public class KillMainController : MonoBehaviour
                         displayingObject[hit.collider.gameObject] += 1;
                         if (displayingObject[hit.collider.gameObject] >= 0)
                         {
-                            hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Die");
-                            displayingObject.Remove(hit.collider.gameObject);
-                            Destroy(hit.collider.gameObject, 0.5f);
-                            Share.score += 1;
+                            ZombieDieAction(hit.collider.gameObject);
                         }
                         else
                         {
@@ -110,12 +109,20 @@ public class KillMainController : MonoBehaviour
             Debug.Log(e);
         }
     }
+
+    public void ZombieDieAction(GameObject zombieObject)
+    {
+        zombieObject.GetComponent<Animator>().SetTrigger("Die");
+        displayingObject.Remove(zombieObject);
+        Destroy(zombieObject, 0.5f);
+        Share.score += 1;
+    }
     public GameObject SpawnRandomEveryWhere(GameObject gameObject)
     {
         Vector3 randomPoint = Vector3.zero;
         randomPoint = camera.ScreenToWorldPoint(
-                    new Vector3(UnityEngine.Random.Range(10, Screen.width-10),
-                     UnityEngine.Random.Range(0, Screen.height-50),
+                    new Vector3(UnityEngine.Random.Range(10, Screen.width - 10),
+                     UnityEngine.Random.Range(0, Screen.height - 50),
                      UnityEngine.Random.Range(2, 7))
                     );
         var createdObject = Instantiate(gameObject, randomPoint, camera.transform.rotation);
@@ -129,6 +136,16 @@ public class KillMainController : MonoBehaviour
     public void BackToMenu()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void HelpButton()
+    {
+        List<GameObject> zombieList = new List<GameObject>(displayingObject.Keys);
+        for (var i = 0; i < zombieList.Count; i++)
+        {
+            ZombieDieAction(zombieList[i]);
+        }
+        HelpBtn.SetActive(false);
     }
     /// <summary>
     /// Check and update the application lifecycle.
